@@ -1,0 +1,22 @@
+##------------------------------------------------------------------------------
+## gitignore
+##
+## @author     Lars Thoms <lars@thoms.io>
+## @date       2023-05-11
+##------------------------------------------------------------------------------
+
+# IDEs
+*.sublime-project
+*.sublime-workspace
+.idea/
+
+# Caches
+go.work
+vendor/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
