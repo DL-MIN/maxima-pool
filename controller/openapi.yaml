@@ -28,32 +28,11 @@ paths:
         - job
       summary: Add a new job to the service
       operationId: createJob
-      parameters:
-        - name: input
-          in: query
-          required: true
-          description: The program to interpret and run
-          schema:
-            type: string
-            example: 5+6; quit();
-        - name: timeout
-          in: query
-          description: Maximum runtime in milliseconds of a job as (server enforces its hard limit)
-          schema:
-            type: number
-            example: 30
-        - name: ploturlbase
-          in: query
-          description: The identifier to mark plots' base URL
-          schema:
-            type: string
-            example: "!ploturl!"
-        - name: version
-          in: query
-          description: The version string of STACK
-          schema:
-            type: string
-            example: 2023010400
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/JobRequest'
       responses:
         '200':
           description: Successful operation
@@ -90,6 +69,26 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    JobRequest:
+      type: object
+      properties:
+        input:
+          type: string
+          required: true
+          description: The program to interpret and run
+          example: 5+6; quit();
+        timeout:
+          type: number
+          description: Maximum runtime in milliseconds of a job as (server enforces its hard limit)
+          example: 30
+        ploturlbase:
+          type: string
+          description: The identifier to mark plots' base URL
+          example: "!ploturl!"
+        version:
+          type: string
+          description: The version string of STACK
+          example: 2023010400
     ErrorResponse:
       type: object
       properties:
