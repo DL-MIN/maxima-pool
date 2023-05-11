@@ -1,25 +1,40 @@
-# Maxima Pool
+# Moodle Maxima Pool
 
-A simple serverside Maxima pool implementation to deal with requests from [moodle-qtype_stack](https://github.com/maths/moodle-qtype_stack).
+A simple serverside MaximaPool implementation to deal with requests from [moodle-qtype_stack](https://github.com/maths/moodle-qtype_stack).
+
+
+## Features
+
+- Automatically fetch maxima scripts from [moodle-qtype_stack](https://github.com/maths/moodle-qtype_stack)
+- Supports multiple plugin versions
+- Prebuild maxima snapshots
+- Supports *HTTP Basic Auth* and API token via HTTP header
 
 
 ## Requirements
 
-- golang
+- golang >= 1.19
 - maxima
 
 
 ## Build
 
 ```shell
-go build maxima-pool.go
+go mod tidy
+go build -a -buildmode=exe -trimpath
 ```
 
 
 ## Usage
 
-All listed options are optional and have a reasonable default value, usage information is available via `-h`.
+Adjust the given configuration file `config.yaml` to your desired values. The search paths for the configuration file are `./config.yaml` and `/etc/maxima-pool/config.yaml`, otherwise define the path with the `-config` flag.
 
 ```shell
-./maxima-pool -host "0.0.0.0" -port "8000" -maxima "/usr/bin/maxima" -timeout "10s" -tmp "/tmp"
+./Moodle_Maxima_Pool -config /path/to/config.yaml
+```
+
+**Important:** Build snapshots before the first run:
+
+```shell
+./Moodle_Maxima_Pool -config /path/to/config.yaml -create-snapshots
 ```
