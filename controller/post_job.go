@@ -20,7 +20,7 @@ func PostJob(c *gin.Context) {
 		PlotURLBase: "!ploturl!",
 	}
 
-	if err := c.ShouldBindQuery(reqQuery); err != nil {
+	if err := c.ShouldBind(reqQuery); err != nil {
 		c.AbortWithStatusJSON(services.Error(errRequestInvalid))
 		return
 	}
