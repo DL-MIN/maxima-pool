@@ -56,7 +56,7 @@ func jobResponse(resp *models.JobResponse, workspace string, output []byte) (err
 
 		if file == nil {
 			file = zip.NewWriter(resp.Output)
-			fileWriter, err := file.Create("/OUTPUT")
+			fileWriter, err := file.Create("OUTPUT")
 			_, err = fileWriter.Write(output)
 			if err != nil {
 				return err
@@ -71,7 +71,7 @@ func jobResponse(resp *models.JobResponse, workspace string, output []byte) (err
 			_ = fileReader.Close()
 		}(fileReader)
 
-		fileWriter, err := file.Create("/" + item.Name())
+		fileWriter, err := file.Create(item.Name())
 		if err != nil {
 			return err
 		}
