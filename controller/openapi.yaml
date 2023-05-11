@@ -53,7 +53,7 @@ paths:
           description: The version string of STACK
           schema:
             type: string
-            example: 4.4.2
+            example: 2023010400
       responses:
         '200':
           description: Successful operation
