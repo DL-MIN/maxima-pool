@@ -1,0 +1,54 @@
+## -----------------------------------------------------------------------------
+## Moodle Maxima Pool configuration file
+##
+## @author     Lars Thoms <lars@thoms.io>
+## @date       2023-05-11
+## -----------------------------------------------------------------------------
+
+---
+# Level of logging:
+# - 0 (DEBUG)
+# - 1 (INFO)
+# - 2 (WARN)
+# - 3 (FATAL)
+loglevel: 0
+
+server:
+  # Bind server to an ip address
+  listen: 127.0.0.1
+
+  # Listen to specific port
+  port: 8080
+
+  # URL base path, e.g. a subdirectory
+  base_path: /MaximaPool
+
+  # API key for client authorization
+  # It's used for API token via header and HTTP Basic Auth password (username
+  # is not validated but required)
+  api_key: ~
+
+storage:
+  # Path to temporary data storage
+  data: /tmp/maxima-data
+
+  # Path to temporary workspace storage
+  workspace: /tmp
+
+maxima:
+  # Path to maxima binary
+  command: maxima
+
+  # Minimum supported version
+  min_version: 4.4.2
+
+  # Git repository of `moodle-qtype_stack`
+  repository: https://github.com/maths/moodle-qtype_stack.git
+
+job:
+  # Max runtime of a job
+  timeout: 30s
+
+  # User context of a job
+  user: ~
+...
