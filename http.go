@@ -103,6 +103,7 @@ func validateAPIKey() gin.HandlerFunc {
 			}
 		}
 
+		c.Header("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
 		c.AbortWithStatusJSON(services.Error(errUnauthenticated))
 	}
 }
