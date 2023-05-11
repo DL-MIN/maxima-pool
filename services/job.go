@@ -33,10 +33,9 @@ func JobCreate(data *models.JobRequestQuery) (resp *models.JobResponse, err erro
 
 	stdOut, _, workspace, clean, err := CommandCreate(
 		minDuration(viper.GetDuration("job.timeout"), time.Duration(data.Timeout)*time.Millisecond),
-		"",
+		fmt.Sprintf(`maxima_tempdir:getcurrentdirectory()$ IMAGE_DIR:getcurrentdirectory()$ URL_BASE:"%s"$\n%s`, data.PlotURLBase, data.Input),
 		path.Join(viper.GetString("storage.data"), "maxima-"+version),
-		"--batch-string",
-		fmt.Sprintf(`maxima_tempdir:getcurrentdirectory()$ IMAGE_DIR:getcurrentdirectory()$ URL_BASE:"%s"$\n%smaxim$quit();`, data.PlotURLBase, data.Input),
+		"--quiet",
 	)
 	defer clean()
 	err = jobResponse(resp, workspace, stdOut)

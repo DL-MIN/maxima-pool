@@ -73,6 +73,9 @@ func commandRun(timeout time.Duration, uid int64, gid int64, workspace string, s
 	if _, err = stdInWriter.Write([]byte(stdIn)); err != nil {
 		return
 	}
+	if err = stdInWriter.Close(); err != nil {
+		return
+	}
 
 	stdOut, err = io.ReadAll(stdOutReader)
 	if err != nil {
