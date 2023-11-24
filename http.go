@@ -50,6 +50,8 @@ func initHTTPRoutes() {
 
 	router.GET("/openapi.json", controller.GetOpenAPI)
 
+	router.GET("/health", controller.GetHealth)
+
 	authorized := router.Group(path.Clean(viper.GetString("server.base_path")), validateAPIKey())
 
 	// Job
