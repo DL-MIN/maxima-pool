@@ -8,16 +8,17 @@
 package services
 
 import (
-	"Moodle_Maxima_Pool/models"
 	_ "embed"
 	"fmt"
+	"os"
+	"path"
+	"regexp"
+
+	"Moodle_Maxima_Pool/models"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/hashicorp/go-version"
 	"github.com/spf13/viper"
-	"os"
-	"path"
-	"regexp"
 )
 
 type ErrNoSnapshotsFound struct{}
@@ -62,7 +63,7 @@ func MaximaSnapshotCreate() (err error) {
 	}()
 
 	// Minimum version constraint
-	versionConstraint, err := version.NewConstraint(">=" + viper.GetString("maxima.min_version"))
+	versionConstraint, err := version.NewConstraint(viper.GetString("maxima.version_constraint"))
 	if err != nil {
 		return
 	}
@@ -102,15 +103,24 @@ func MaximaSnapshotCreate() (err error) {
 	return
 }
 
-func maximaSnapshotCreate(workspace string, tag *object.Tag) (err error) {
+func getStackVersion(workspace string) (string, error) {
 	stackmaxima, err := os.ReadFile(path.Join(workspace, "stack", "maxima", "stackmaxima.mac"))
 	if err != nil {
-		return
+		return "", err
 	}
 
 	match := maximaVersionRegex.FindSubmatch(stackmaxima)
 	if match == nil {
-		return ErrVersionNotFound(tag.Name)
+		return "", ErrVersionNotFound("")
+	}
+
+	return string(match[1]), nil
+}
+
+func maximaSnapshotCreate(workspace string, tag *object.Tag) (err error) {
+	stackVersion, err := getStackVersion(workspace)
+	if err != nil {
+		return err
 	}
 
 	batchString := fmt.Sprintf(
@@ -122,14 +132,14 @@ func maximaSnapshotCreate(workspace string, tag *object.Tag) (err error) {
 		path.Join(workspace, "stack", "maxima", "###.{mac,mc}"),
 		path.Join(workspace, "stack", "maxima", "###.{lisp}"),
 		maximaLocal,
-		path.Join(viper.GetString("storage.data"), "maxima-"+string(match[1])))
+		path.Join(viper.GetString("storage.data"), "maxima-"+stackVersion))
 
 	_, _, _, clean, err := CommandCreate(viper.GetDuration("job.timeout"), "", viper.GetString("maxima.command"), "--quiet", "--batch-string", batchString)
 	defer clean()
 	if err != nil {
 		return
 	}
-	maximaSnapshotList = append(maximaSnapshotList, models.MaximaSnapshot(match[1]))
+	maximaSnapshotList = append(maximaSnapshotList, models.MaximaSnapshot(stackVersion))
 	return
 }
 
