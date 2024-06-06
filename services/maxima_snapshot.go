@@ -86,8 +86,8 @@ func MaximaSnapshotCreate() (err error) {
 		return
 	}
 	err = tags.ForEach(func(item *object.Tag) (err error) {
-		tag, err := version.NewVersion(item.Name)
-		if err != nil || !versionConstraint.Check(tag) {
+		tag, err2 := version.NewVersion(item.Name)
+		if err2 != nil || !versionConstraint.Check(tag) {
 			return
 		}
 
